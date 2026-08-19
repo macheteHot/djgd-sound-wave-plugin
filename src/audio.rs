@@ -5,10 +5,20 @@
 //! 系统正在播放的混音样本，无需虚拟声卡。
 
 use std::sync::mpsc::SyncSender;
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use cpal::{Device, SampleFormat, Stream, StreamConfig};
+use cpal::{BufferSize, Device, ErrorKind, SampleFormat, Stream, StreamConfig};
+
+/// 环路回采环形缓冲时长（毫秒）。WASAPI 共享模式默认缓冲仅约 10ms，Windows 上采集线程
+/// 稍有调度抖动就会被音频引擎判为 overrun（报 "A buffer underrun or overrun occurred"）并丢样本；
+/// 加大到 100ms 给回采留足余量。只影响本采集流内部延迟，不影响输出声音。
+const LOOPBACK_BUFFER_MS: u32 = 100;
+
+fn loopback_buffer_frames(sample_rate: u32) -> u32 {
+    (sample_rate * LOOPBACK_BUFFER_MS / 1000).max(1)
+}
 
 pub struct Capture {
     /// 刻意持有：stream Drop 时采集停止；字段本身无需读取。
@@ -68,7 +78,8 @@ pub fn start_loopback_capture(
     let sample_rate = supported.sample_rate();
     let channels = supported.channels();
     let sample_format = supported.sample_format();
-    let config: StreamConfig = supported.into();
+    let mut config: StreamConfig = supported.into();
+    config.buffer_size = BufferSize::Fixed(loopback_buffer_frames(sample_rate));
 
     let stream = build_input_stream(&device, config, sample_format, tx)
         .with_context(|| format!("在输出设备 \"{dev_name}\" 上打开环路回采失败"))?;
@@ -111,7 +122,19 @@ fn build_input_stream(
     format: SampleFormat,
     tx: SyncSender<Vec<f32>>,
 ) -> Result<Stream> {
-    let err_fn = |e| eprintln!("采集错误: {e}");
+    // Xrun（缓冲溢出）只是丢样本的提示，采集流不会中断，节流打印避免刷屏；
+    // 其余错误（设备拔出等）立即输出。
+    let mut last_xrun_log = Instant::now() - Duration::from_secs(11);
+    let err_fn = move |e: cpal::Error| {
+        if e.kind() == ErrorKind::Xrun {
+            if last_xrun_log.elapsed() >= Duration::from_secs(10) {
+                eprintln!("采集缓冲溢出（underrun/overrun），已丢弃部分音频样本");
+                last_xrun_log = Instant::now();
+            }
+        } else {
+            eprintln!("采集错误: {e}");
+        }
+    };
     let stream = match format {
         // WASAPI 共享模式混音格式固定为 float32，这是 Windows 上的主路径。
         SampleFormat::F32 => device.build_input_stream::<f32, _, _>(
