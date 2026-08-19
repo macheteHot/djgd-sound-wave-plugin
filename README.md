@@ -1,6 +1,6 @@
 # djgd-sound-wave-plugin
 
-捕获电脑正在播放的声音，实时生成波形 JSON，POST 到本地 lhm 的 `/inject` 端点（固定端口 18080）。产物为 Windows x64 单文件 exe，作为 lhm 的音频波形插件运行。
+捕获电脑正在播放的声音，实时生成波形 JSON，POST 到本地 lhm 服务的 `/inject` 端点（固定端口 18080）。产物为 Windows x64 单文件 exe，作为 lhm 的音频波形插件运行。
 
 ## 项目目标
 
@@ -17,7 +17,7 @@
 
 ## 与 lhm 的集成契约
 
-对接 `lhm`（`src/Program.cs`）的插件注入机制：
+对接 lhm 服务端（`src/Program.cs`）的插件注入机制：
 
 | 项 | 值 |
 | --- | --- |

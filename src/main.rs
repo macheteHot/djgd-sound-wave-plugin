@@ -22,7 +22,7 @@ struct Args {
     #[arg(long, default_value = "127.0.0.1")]
     host: String,
 
-    /// lhm 固定端口（默认 18080，与 djgd 一致）
+    /// lhm 固定端口（默认 18080）
     #[arg(long, default_value_t = 18080)]
     port: u16,
 
