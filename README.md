@@ -1,4 +1,4 @@
-# SoundAnalysis
+# djgd-sound-wave-plugin
 
 捕获电脑正在播放的声音，实时生成波形 JSON，POST 到本地 lhm 的 `/inject` 端点（固定端口 18080）。产物为 Windows x64 单文件 exe，作为 lhm 的音频波形插件运行。
 
@@ -10,7 +10,7 @@
 
 ## 技术栈
 
-- **Rust**（edition 2024），目标平台 **Windows x64**，产物为单文件 exe（`target/release/sound-analysis.exe`）
+- **Rust**（edition 2024），目标平台 **Windows x64**，产物为单文件 exe（`target/release/djgd-sound-wave-plugin.exe`）
 - 音频采集：[cpal](https://crates.io/crates/cpal)（WASAPI 环路回采）
 - CLI：[clap](https://crates.io/crates/clap) derive；HTTP：[ureq](https://crates.io/crates/ureq)（关闭 TLS，仅本地 http）
 - 依赖全为纯 Rust，**无 C 编译依赖**，打包机无需额外工具链
@@ -89,7 +89,7 @@
 
 ```powershell
 cargo build --release
-# 产物：target\release\sound-analysis.exe
+# 产物：target\release\djgd-sound-wave-plugin.exe
 ```
 
 本机（macOS）只能做类型检查与测试（`check` 不链接，无需 MSVC）：
@@ -102,8 +102,8 @@ cargo test                                    # 单元测试（波形聚合 / �
 ## 运行
 
 ```powershell
-sound-analysis.exe                 # 默认：采集默认输出设备，注入 127.0.0.1:18080
-sound-analysis.exe --list-devices  # 查看设备名，配合 --device 指定
+djgd-sound-wave-plugin.exe                 # 默认：采集默认输出设备，注入 127.0.0.1:18080
+djgd-sound-wave-plugin.exe --list-devices  # 查看设备名，配合 --device 指定
 ```
 
 - 由 djgd 以**管道 stdin** 拉起时：父进程关闭 stdin 即退出（与 lhm console 模式生命周期一致）。

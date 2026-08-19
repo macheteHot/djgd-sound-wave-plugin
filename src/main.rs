@@ -1,4 +1,4 @@
-//! sound-analysis：捕获系统正在播放的声音，生成波形 JSON，POST 到本地 lhm `/inject`。
+//! djgd-sound-wave-plugin：捕获系统正在播放的声音，生成波形 JSON，POST 到本地 lhm `/inject`。
 //!
 //! 目标平台 Windows x64，产物为单文件 exe（在打包机上 `cargo build --release`）。
 
@@ -16,7 +16,7 @@ use clap::Parser;
 
 /// 捕获系统正在播放的声音，生成波形 JSON，POST 到本地 lhm 的 /inject 端点。
 #[derive(Parser, Debug)]
-#[command(name = "sound-analysis", version, about, long_about = None)]
+#[command(name = "djgd-sound-wave-plugin", version, about, long_about = None)]
 struct Args {
     /// lhm 服务监听地址
     #[arg(long, default_value = "127.0.0.1")]

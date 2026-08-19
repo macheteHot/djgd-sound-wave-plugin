@@ -345,6 +345,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "djgd-sound-wave-plugin"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "cpal",
+ "ctrlc",
+ "serde",
+ "serde_json",
+ "ureq",
+]
+
+[[package]]
 name = "document-features"
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1038,20 +1052,6 @@ name = "smallvec"
 version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ed6a63f02c8539c91a8685a86f4099661ba3da017932f6ebbea6de3f0fa7c90"
-
-[[package]]
-name = "sound-analysis"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "cpal",
- "ctrlc",
- "serde",
- "serde_json",
- "ureq",
-]
 
 [[package]]
 name = "stable_deref_trait"

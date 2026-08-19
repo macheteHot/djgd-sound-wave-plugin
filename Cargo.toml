@@ -1,5 +1,5 @@
 [package]
-name = "sound-analysis"
+name = "djgd-sound-wave-plugin"
 version = "0.1.0"
 edition = "2024"
 description = "捕获系统正在播放的声音，生成波形 JSON，POST 到本地 lhm /inject 端点（Windows x64 插件）"
