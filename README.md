@@ -24,7 +24,7 @@
 | 端点 | `POST http://127.0.0.1:18080/inject`（端口与 lhm `DefaultPort` / electron `LHM_FIXED_PORT` 一致，可用 `--port` 覆盖） |
 | Body | `{ 字段名: 值, ..., "__fields": { 字段名: 定义 } }` |
 | 字段定义 | `label`（非空字符串）与 `unit` 必填，`min`/`max` 可选数值，`group` 透传 |
-| 字段 TTL | **5 秒**，每次上报必须携带 `__fields` 刷新；上报间隔必须小于 5000ms（CLI 已强制校验） |
+| 字段有效期 | 不过期，`__fields` 字段定义持久生效 |
 
 ### 注入字段
 
@@ -82,7 +82,7 @@
 | `--port` | `18080` | lhm 固定端口 |
 | `--device` | 系统默认输出设备 | 输出设备名模糊匹配（不区分大小写）；不指定则默认设备环路回采 |
 | `--window-ms` | `20` | 单个波形窗口时长 |
-| `--interval-ms` | `1000` | 上报间隔，必须小于 5000 |
+| `--interval-ms` | `1000` | 上报间隔（毫秒） |
 | `--list-devices` | — | 列出可用输出设备后退出 |
 
 ## 构建（打包机，Windows x64）
@@ -114,7 +114,7 @@ djgd-sound-wave-plugin.exe --list-devices  # 查看设备名，配合 --device �
 - [x] 选定技术栈（Rust + cpal + ureq，Windows x64 exe）
 - [x] 实现系统声音环路回采（WASAPI loopback，无需虚拟声卡）
 - [x] 实现波形聚合并输出 JSON（窗口 min/max/rms）
-- [x] 实现 /inject 注入（重试、字段定义、TTL 刷新）
+- [x] 实现 /inject 注入（重试、字段定义）
 - [x] 端到端联调（对真实 lhm 服务验证 SSE 合并效果）
 
 ## 许可证

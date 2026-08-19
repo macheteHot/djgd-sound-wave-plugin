@@ -3,7 +3,7 @@
 //! 契约（与 lhm 服务端 `Program.cs` 对齐）：
 //! - POST body 为 `{ 字段名: 值, ..., "__fields": { 字段名: 定义 } }`；
 //! - 字段定义要求 `label`（非空字符串）与 `unit` 必填，`min`/`max` 可选数值；
-//! - 字段 5 秒 TTL 过期，因此每次上报都要携带，且上报间隔必须小于 5 秒。
+//! - 注入字段无 TTL 过期，字段定义持久生效；`__fields` 定义仍随每次上报携带（幂等）。
 
 use std::time::Duration;
 
@@ -30,7 +30,7 @@ pub fn build_agent() -> Agent {
     Agent::new_with_config(config)
 }
 
-/// 序列化一批波形为 lhm `/inject` 请求体（值 + `__fields` 定义，每次携带以刷新 TTL）。
+/// 序列化一批波形为 lhm `/inject` 请求体（值 + `__fields` 定义）。
 pub fn build_payload(batch: &WaveformBatch) -> serde_json::Value {
     let level = batch
         .bins

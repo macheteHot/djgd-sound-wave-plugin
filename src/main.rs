@@ -34,7 +34,7 @@ struct Args {
     #[arg(long, default_value_t = 20)]
     window_ms: u64,
 
-    /// 上传间隔（毫秒），必须小于 5000（lhm 注入字段 TTL 为 5 秒）
+    /// 上传间隔（毫秒）
     #[arg(long, default_value_t = 1000)]
     interval_ms: u64,
 
@@ -53,8 +53,8 @@ fn main() -> Result<()> {
     if args.window_ms == 0 {
         bail!("--window-ms 必须大于 0");
     }
-    if args.interval_ms == 0 || args.interval_ms >= 5000 {
-        bail!("--interval-ms 必须在 1..5000 之间（lhm 注入字段 TTL 为 5 秒）");
+    if args.interval_ms == 0 {
+        bail!("--interval-ms 必须大于 0");
     }
 
     let stop = Arc::new(AtomicBool::new(false));
