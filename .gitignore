@@ -25,3 +25,8 @@ node_modules/
 
 # Go
 bin/
+
+
+# Added by cargo
+
+/target
