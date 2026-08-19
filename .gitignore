@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# 环境与密钥
+.env
+.env.local
+
+# 日志与数据
+*.log
+data/
+
+# 通用构建产物
+build/
+dist/
+target/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node.js
+node_modules/
+
+# Go
+bin/
