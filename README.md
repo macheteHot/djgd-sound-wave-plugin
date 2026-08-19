@@ -119,4 +119,4 @@ djgd-sound-wave-plugin.exe --list-devices  # 查看设备名，配合 --device �
 
 ## 许可证
 
-待定
+[MIT](LICENSE)
